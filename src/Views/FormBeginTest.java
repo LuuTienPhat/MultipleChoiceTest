@@ -5,17 +5,44 @@
  */
 package Views;
 
+import Models.Test;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author DTTM
  */
 public class FormBeginTest extends javax.swing.JFrame {
+    
+    Socket client;
+    DataInputStream dataInputStream;
+    DataOutputStream dataOutputStream;
+    ObjectInputStream objectInputStream;
+    ObjectOutputStream objectOutputStream;
+    int port = 1234;
+    String host = "localhost";
 
     /**
      * Creates new form FormBeginTest
      */
     public FormBeginTest() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        levelA.setActionCommand("A");
+        levelB.setActionCommand("B");
+        levelC.setActionCommand("C");
+        txtName.setText(Main.student.getStudentName());
+        txtBirthday.setText(Main.student.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        txtAddress.setText(Main.student.getStudentName());
     }
 
     /**
@@ -28,21 +55,23 @@ public class FormBeginTest extends javax.swing.JFrame {
     private void initComponents() {
 
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
-        level = new javax.swing.ButtonGroup();
+        levelGroup = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtName = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         levelA = new javax.swing.JRadioButton();
         levelB = new javax.swing.JRadioButton();
         levelC = new javax.swing.JRadioButton();
-        jTextField2 = new javax.swing.JTextField();
+        txtBirthday = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtAddress = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         start = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
 
         jFormattedTextField1.setText("jFormattedTextField1");
 
@@ -50,13 +79,16 @@ public class FormBeginTest extends javax.swing.JFrame {
 
         jLabel1.setText("Họ và Tên:");
 
+        txtName.setEditable(false);
+
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setText("Bắt đầu thi");
 
-        level.add(levelA);
+        levelGroup.add(levelA);
+        levelA.setSelected(true);
         levelA.setText("A");
 
-        level.add(levelB);
+        levelGroup.add(levelB);
         levelB.setText("B");
         levelB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -64,22 +96,35 @@ public class FormBeginTest extends javax.swing.JFrame {
             }
         });
 
-        level.add(levelC);
+        levelGroup.add(levelC);
         levelC.setText("C");
 
+        txtBirthday.setEditable(false);
+
         jLabel3.setText("Ngày sinh:");
+
+        txtAddress.setEditable(false);
 
         jLabel4.setText("Địa chỉ:");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setText("Thông tin thí sinh");
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel6.setText("Trình độ");
+        jLabel6.setText("Trình độ:");
 
         start.setText("Bắt đầu thi");
+        start.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startActionPerformed(evt);
+            }
+        });
 
-        jButton1.setText("Xem Bảng điểm");
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel7.setText("Tùy chọn thi");
+
+        jLabel8.setText("Thời gian:");
+
+        jLabel9.setText("5 phút/ câu");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -93,17 +138,14 @@ public class FormBeginTest extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel4)
-                                    .addComponent(jLabel6))
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel8))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(start)
@@ -114,8 +156,14 @@ public class FormBeginTest extends javax.swing.JFrame {
                                             .addComponent(levelB)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(levelC))
-                                        .addComponent(jButton1)
-                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                        .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel9)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel7)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel3)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txtBirthday, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(34, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(123, 123, 123)
@@ -132,26 +180,30 @@ public class FormBeginTest extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtBirthday, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(70, 70, 70)
+                .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addGap(58, 58, 58)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(levelA)
                     .addComponent(levelB)
                     .addComponent(levelC)
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addComponent(start)
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addGap(32, 32, 32))
         );
 
         pack();
@@ -160,6 +212,35 @@ public class FormBeginTest extends javax.swing.JFrame {
     private void levelBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_levelBActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_levelBActionPerformed
+
+    private void startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startActionPerformed
+        // TODO add your handling code here:
+        String level = levelGroup.getSelection().getActionCommand();
+        
+        try {
+            client = new Socket(host, port);
+            dataOutputStream = new DataOutputStream(client.getOutputStream());
+            objectInputStream = new ObjectInputStream(client.getInputStream());
+            
+            dataOutputStream.writeUTF("gettest");
+            dataOutputStream.writeUTF(level);
+            Main.test = new Test();
+            Main.test.setLevel(level);
+
+            //objectOutputStream.writeObject(Main.test);
+            Main.test = (Test) objectInputStream.readObject();
+            LocalDateTime localDateTime = LocalDateTime.now();
+            Main.test.setDatetime(localDateTime);
+            new FormTest().setVisible(true);
+            
+            this.dispose();
+            
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FormBeginTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_startActionPerformed
 
     /**
      * @param args the command line arguments
@@ -189,15 +270,14 @@ public class FormBeginTest extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FormBeginTest().setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new FormBeginTest().setVisible(true);
+//            }
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -205,13 +285,16 @@ public class FormBeginTest extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.ButtonGroup level;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JRadioButton levelA;
     private javax.swing.JRadioButton levelB;
     private javax.swing.JRadioButton levelC;
+    private javax.swing.ButtonGroup levelGroup;
     private javax.swing.JButton start;
+    private javax.swing.JTextField txtAddress;
+    private javax.swing.JTextField txtBirthday;
+    private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
 }
