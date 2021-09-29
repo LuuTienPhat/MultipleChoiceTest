@@ -5,7 +5,7 @@
  */
 package Views;
 
-import Models.Test;
+import Models.Exam;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author DTTM
+ * @author Phat
  */
 public class FormBeginTest extends javax.swing.JFrame {
     
@@ -224,11 +224,11 @@ public class FormBeginTest extends javax.swing.JFrame {
             
             dataOutputStream.writeUTF("gettest");
             dataOutputStream.writeUTF(level);
-            Main.test = new Test();
+            Main.test = new Exam();
             Main.test.setLevel(level);
 
             //objectOutputStream.writeObject(Main.test);
-            Main.test = (Test) objectInputStream.readObject();
+            Main.test = (Exam) objectInputStream.readObject();
             LocalDateTime localDateTime = LocalDateTime.now();
             Main.test.setDatetime(localDateTime);
             new FormTest().setVisible(true);

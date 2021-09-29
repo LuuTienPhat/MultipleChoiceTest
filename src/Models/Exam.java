@@ -13,7 +13,7 @@ import java.util.ArrayList;
  *
  * @author Phat
  */
-public class Test implements Serializable{
+public class Exam implements Serializable{
 
     private String StudentId;
     private int score;
@@ -21,10 +21,10 @@ public class Test implements Serializable{
     private String level;
     private LocalDateTime datetime;
 
-    public Test() {
+    public Exam() {
     }
 
-    public Test(String StudentId, int score, ArrayList<MultipleChoiceQuestion> multipleChoiceQuestion, String level, LocalDateTime datetime) {
+    public Exam(String StudentId, int score, ArrayList<MultipleChoiceQuestion> multipleChoiceQuestion, String level, LocalDateTime datetime) {
         this.StudentId = StudentId;
         this.score = score;
         this.multipleChoiceQuestion = multipleChoiceQuestion;

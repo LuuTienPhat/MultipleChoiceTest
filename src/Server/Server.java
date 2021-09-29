@@ -2,7 +2,7 @@ package Server;
 
 import Models.MultipleChoiceQuestion;
 import Models.Student;
-import Models.Test;
+import Models.Exam;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -89,7 +89,7 @@ public class Server {
                 case "gettest": {
                     String level = dataInputStream.readUTF();
 
-                    Test test = new Test();
+                    Exam test = new Exam();
                     test.setLevel(level);
 
                     try {

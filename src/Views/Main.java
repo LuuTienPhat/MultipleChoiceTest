@@ -6,7 +6,7 @@
 package Views;
 
 import Models.Student;
-import Models.Test;
+import Models.Exam;
 import java.io.IOException;
 
 /**
@@ -17,7 +17,7 @@ public class Main {
 
 
     public static Student student = null;
-    public static Test test = null;
+    public static Exam test = null;
 
     public static void main(String[] args) throws IOException {
         /* Set the Windows look and feel */
