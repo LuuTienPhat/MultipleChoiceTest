@@ -35,7 +35,7 @@ public class DBAccess {
 
     public int Update(String str) {
         try {
-            System.out.println(str);
+//            System.out.println(str);
             int i = stmt.executeUpdate(str);
             return i;
         } catch (SQLException e) {
