@@ -5,25 +5,26 @@
  */
 package Models;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  *
  * @author Phat
  */
-public class Test {
+public class Test implements Serializable{
 
     private String StudentId;
     private int score;
-    private MultipleChoiceQuestion multipleChoiceQuestion;
+    private ArrayList<MultipleChoiceQuestion> multipleChoiceQuestion = new ArrayList<>();
     private String level;
     private LocalDateTime datetime;
 
     public Test() {
     }
 
-    public Test(String StudentId, int score, MultipleChoiceQuestion multipleChoiceQuestion, String level, LocalDateTime datetime) {
+    public Test(String StudentId, int score, ArrayList<MultipleChoiceQuestion> multipleChoiceQuestion, String level, LocalDateTime datetime) {
         this.StudentId = StudentId;
         this.score = score;
         this.multipleChoiceQuestion = multipleChoiceQuestion;
@@ -47,11 +48,11 @@ public class Test {
         this.score = score;
     }
 
-    public MultipleChoiceQuestion getMultipleChoiceQuestion() {
+    public ArrayList<MultipleChoiceQuestion> getMultipleChoiceQuestion() {
         return multipleChoiceQuestion;
     }
 
-    public void setMultipleChoiceQuestion(MultipleChoiceQuestion multipleChoiceQuestion) {
+    public void setMultipleChoiceQuestion(ArrayList<MultipleChoiceQuestion> multipleChoiceQuestion) {
         this.multipleChoiceQuestion = multipleChoiceQuestion;
     }
 
