@@ -5,20 +5,29 @@
  */
 package Models;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 /**
  *
  * @author DTTM
  */
-public class Student {
+public class Student implements Serializable{
     private String StudentId;
     private String StudentName;
+    private LocalDateTime dateOfBirth;
+    private String address;
 
-    public Student() {
-    }
-
-    public Student(String StudentId, String StudentName) {
+    public Student(String StudentId, String StudentName, LocalDateTime dateOfBirth, String address) {
         this.StudentId = StudentId;
         this.StudentName = StudentName;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+    }
+
+    public Student() {
+        
     }
 
     public String getStudentId() {
@@ -36,4 +45,22 @@ public class Student {
     public void setStudentName(String StudentName) {
         this.StudentName = StudentName;
     }
+
+    public LocalDateTime getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDateTime dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
+    
 }
