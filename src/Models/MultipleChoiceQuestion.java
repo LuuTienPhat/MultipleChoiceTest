@@ -5,13 +5,14 @@
  */
 package Models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author Phat
  */
-public class MultipleChoiceQuestion {
+public class MultipleChoiceQuestion implements Serializable{
 
     private String question;
     private ArrayList<String> choices;
