@@ -6,22 +6,21 @@
 package Models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
  * @author Phat
  */
 public class MultipleChoiceQuestion implements Serializable{
-
     private String question;
-    private ArrayList<String> choices;
+    private HashMap<String, String> choices = new HashMap<>();
     private String answer;
 
     public MultipleChoiceQuestion() {
     }
 
-    public MultipleChoiceQuestion(String question, ArrayList<String> choices, String answer) {
+    public MultipleChoiceQuestion(String question, HashMap<String, String> choices, String answer) {
         this.question = question;
         this.choices = choices;
         this.answer = answer;
@@ -35,11 +34,11 @@ public class MultipleChoiceQuestion implements Serializable{
         this.question = question;
     }
 
-    public ArrayList<String> getChoices() {
+    public HashMap<String, String> getChoices() {
         return choices;
     }
 
-    public void setChoices(ArrayList<String> choices) {
+    public void setChoices(HashMap<String, String> choices) {
         this.choices = choices;
     }
 
