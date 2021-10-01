@@ -3,6 +3,7 @@ package Server;
 import Models.MultipleChoiceQuestion;
 import Models.Student;
 import Models.Exam;
+import Models.Record;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -50,15 +51,34 @@ public class Server {
                     Student student = new Student();
                     try {
                         DBAccess db = new DBAccess();
-                        String sql = "SELECT * FROM SINHVIEN WHERE Username = '" + username + "' AND Password = '" + password + "'";
-                        System.out.println(sql);
-                        ResultSet rs = db.Query(sql);
+                        String GET_STUDENT = "SELECT * FROM SINHVIEN WHERE Username = '" + username + "' AND Password = '" + password + "'";
+                        System.out.println(GET_STUDENT);
+                        ResultSet rs = db.Query(GET_STUDENT);
+                        String studentId = "";
                         if (rs.next()) {
+                            studentId = rs.getString("MASV").trim();
+
                             student = new Student();
                             student.setStudentId(rs.getString("MASV").trim());
                             student.setStudentName(rs.getString("HO").trim() + " " + rs.getString("TEN").trim());
                             student.setDateOfBirth(rs.getTimestamp("NGAYSINH").toLocalDateTime());
                             student.setAddress(rs.getString("DIACHI").trim());
+
+                        }
+
+//                        db = new DBAccess();
+                        String GET_RECORD = "SELECT * FROM BANGDIEM WHERE MASV = '" + studentId + "' ORDER BY NGAYTHI DESC";
+                        ResultSet rs1 = db.Query(GET_RECORD);
+                        System.out.println(GET_RECORD);
+
+                        while (rs1.next()) {
+                            Record record = new Record();
+                            record.setDate(rs1.getTimestamp("NGAYTHI").toLocalDateTime().toLocalDate());
+                            record.setTime(rs1.getTimestamp("NGAYTHI").toLocalDateTime().toLocalTime());
+                            record.setScore(rs1.getInt("DIEMTHI"));
+                            record.setLevel(rs1.getString("TRINHDO"));
+
+                            student.getRecords().add(record);
                         }
 
                         objectOutputStream.writeObject(student);
@@ -82,9 +102,61 @@ public class Server {
                     System.out.println(WRITE_RESULT);
                     db.Update(WRITE_RESULT);
                     System.out.println("WRITE SUCCESSFULLY");
+
+                    ArrayList<Record> records = new ArrayList<>();
+                    try {
+                        String GET_RECORD = "SELECT * FROM BANGDIEM WHERE MASV = '" + studentId + "' ORDER BY NGAYTHI DESC";
+                        System.out.println(GET_RECORD);
+                        ResultSet rs = db.Query(GET_RECORD);
+
+                        while (rs.next()) {
+                            Record record = new Record();
+                            record.setDate(rs.getTimestamp("NGAYTHI").toLocalDateTime().toLocalDate());
+                            record.setTime(rs.getTimestamp("NGAYTHI").toLocalDateTime().toLocalTime());
+                            record.setScore(rs.getInt("DIEMTHI"));
+                            record.setLevel(rs.getString("TRINHDO"));
+
+                            records.add(record);
+                        }
+
+                        objectOutputStream.writeObject(records);
+                        System.out.println("records sent");
+
+                    } catch (SQLException ex) {
+                        System.err.println(ex.getMessage());
+                    }
                     break;
                 }
 
+                case "examhistories": {
+                    String studentId = dataInputStream.readUTF();
+                    ArrayList<Record> records = new ArrayList<>();
+
+                    try {
+                        DBAccess db = new DBAccess();
+                        String GET_RECORD = "SELECT * FROM BANGDIEM WHERE MASV = '" + studentId + "' ORDER BY NGAYTHI DESC";
+                        System.out.println(GET_RECORD);
+                        ResultSet rs = db.Query(GET_RECORD);
+
+                        while (rs.next()) {
+                            Record record = new Record();
+                            record.setDate(rs.getTimestamp("NGAYTHI").toLocalDateTime().toLocalDate());
+                            record.setTime(rs.getTimestamp("NGAYTHI").toLocalDateTime().toLocalTime());
+                            record.setScore(rs.getInt("DIEMTHI"));
+                            record.setLevel(rs.getString("TRINHDO"));
+
+                            records.add(record);
+                        }
+
+                        objectOutputStream.writeObject(records);
+                        System.out.println("multipleChoiceQuestion sent");
+
+                    } catch (SQLException ex) {
+                        System.err.println(ex.getMessage());
+                    }
+
+                    break;
+                }
 
                 case "gettest": {
                     String level = dataInputStream.readUTF();
