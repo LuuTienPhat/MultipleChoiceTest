@@ -5,18 +5,20 @@
  */
 package Views;
 
+import Models.Record;
 import Models.Student;
+import java.awt.event.ActionEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 /**
  *
@@ -26,11 +28,14 @@ public class FormTest extends javax.swing.JFrame {
 
     Socket client;
     DataInputStream dataInputStream;
+    ObjectInputStream objectInputStream;
     DataOutputStream dataOutputStream;
     int port = 1234;
     String host = "localhost";
     int score = 0;
     int number = 0;
+    public int minute = 0, second = 4;
+    Timer timer;
 
     /**
      * Creates new form TestForm
@@ -42,16 +47,36 @@ public class FormTest extends javax.swing.JFrame {
         B.setActionCommand("B");
         C.setActionCommand("C");
         D.setActionCommand("D");
+        
         lbName.setText(Main.student.getStudentName());
         lbLevel.setText(Main.test.getLevel());
-
+        txtQ.setText("Câu hỏi: " + (number + 1));
         txtQuestion.setText(Main.test.getMultipleChoiceQuestion().get(number).getQuestion());
         txtAnswerA.setText(Main.test.getMultipleChoiceQuestion().get(number).getChoices().get("A"));
         txtAnswerB.setText(Main.test.getMultipleChoiceQuestion().get(number).getChoices().get("B"));
         txtAnswerC.setText(Main.test.getMultipleChoiceQuestion().get(number).getChoices().get("C"));
         txtAnswerD.setText(Main.test.getMultipleChoiceQuestion().get(number).getChoices().get("D"));
-
         numberOfQuestion.setText((number + 1) + "/" + Main.test.getMultipleChoiceQuestion().size());
+//        timer = new Timer(1000, (ActionEvent e) -> {
+//            if (second == 0 && minute > 0) {
+//                minute--;
+//                second = 60;
+//            } else if (second == 0 && minute == 0) {
+//                timer.stop();
+//                minute = 2;
+//                second = 60;
+//                timer.start();
+//                btnNext.doClick();
+//                return;
+//            }
+//
+//            second--;
+//
+//            String sec = second < 10 ? "0" + second : second + "";
+//            String min = minute < 10 ? "0" + minute : minute + "";
+//            lbTimer.setText(min + ":" + sec);
+//        });
+//        timer.start();
     }
 
     /**
@@ -82,6 +107,8 @@ public class FormTest extends javax.swing.JFrame {
         txtAnswerC = new javax.swing.JTextField();
         txtAnswerD = new javax.swing.JTextField();
         btnDone = new javax.swing.JButton();
+        lbTimer = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -146,52 +173,62 @@ public class FormTest extends javax.swing.JFrame {
             }
         });
 
+        lbTimer.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lbTimer.setText("05:00");
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(50, 50, 50)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(numberOfQuestion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDone)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(numberOfQuestion)))
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(C, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtAnswerC, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(D, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtAnswerD, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtQ)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(btnNext))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(btnDone)
-                            .addGap(18, 18, 18)
-                            .addComponent(btnNext))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(lbLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lbName, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(411, 411, 411)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(B, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtAnswerB, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(A, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(C, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtAnswerA, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(65, Short.MAX_VALUE))
+                            .addComponent(txtAnswerC, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(D, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtAnswerD, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtQ)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(B, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtAnswerB, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1))
+                                .addGap(10, 10, 10)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(lbLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbName, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1)
+                                .addGap(46, 46, 46)
+                                .addComponent(lbTimer))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(A, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtAnswerA, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -203,8 +240,10 @@ public class FormTest extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(lbLevel))
-                .addGap(33, 33, 33)
+                    .addComponent(lbLevel)
+                    .addComponent(lbTimer)
+                    .addComponent(jButton1))
+                .addGap(28, 28, 28)
                 .addComponent(txtQ)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -224,7 +263,7 @@ public class FormTest extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(D)
                     .addComponent(txtAnswerD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(numberOfQuestion)
                     .addComponent(btnNext)
@@ -249,10 +288,9 @@ public class FormTest extends javax.swing.JFrame {
             writeResult();
             return;
         }
-        
-       
-        number++;
 
+        number++;
+        txtQ.setText("Câu hỏi: " + (number + 1));
         txtQuestion.setText(Main.test.getMultipleChoiceQuestion().get(number).getQuestion());
         txtAnswerA.setText(Main.test.getMultipleChoiceQuestion().get(number).getChoices().get("A"));
         txtAnswerB.setText(Main.test.getMultipleChoiceQuestion().get(number).getChoices().get("B"));
@@ -263,31 +301,30 @@ public class FormTest extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnNextActionPerformed
 
-    
-
     private void writeResult() {
         String studentId = Main.student.getStudentId();
-        String datetime = Main.test.getDatetime().format(DateTimeFormatter.ISO_DATE);
-        String score = Integer.toString(Main.test.getScore());
+        String datetime = Main.test.getDatetime().withNano(0).format(DateTimeFormatter.ISO_DATE_TIME);
+        String scoreString = Integer.toString(Main.test.getScore());
         String level = Main.test.getLevel();
-        
+
         try {
             client = new Socket(host, port);
             //dataInputStream = new DataInputStream((client.getInputStream()));
+            objectInputStream = new ObjectInputStream(client.getInputStream());
             dataOutputStream = new DataOutputStream(client.getOutputStream());
 
             dataOutputStream.writeUTF("write");
             dataOutputStream.writeUTF(studentId);
             dataOutputStream.writeUTF(datetime);
-            dataOutputStream.writeUTF(score);
+            dataOutputStream.writeUTF(scoreString);
             dataOutputStream.writeUTF(level);
-            
-            //System.out.println(dataInputStream.readUTF());
+
+            Main.student.setRecords((ArrayList<Record>) objectInputStream.readObject());
 
             new FormResult().setVisible(true);
             this.dispose();
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(FormTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -296,10 +333,16 @@ public class FormTest extends javax.swing.JFrame {
         int choose = JOptionPane.showConfirmDialog(null, "Bạn muốn nộp bài chứ?", "", JOptionPane.OK_CANCEL_OPTION);
         if (choose == JOptionPane.OK_OPTION) {
             Main.test.setScore(score);
-           writeResult();
-           return;
+            writeResult();
+            return;
         }
     }//GEN-LAST:event_btnDoneActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -345,11 +388,13 @@ public class FormTest extends javax.swing.JFrame {
     private javax.swing.JButton btnDone;
     private javax.swing.JButton btnNext;
     private javax.swing.ButtonGroup choiceGroup;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbLevel;
     private javax.swing.JLabel lbName;
+    private javax.swing.JLabel lbTimer;
     private javax.swing.JLabel numberOfQuestion;
     private javax.swing.JTextField txtAnswerA;
     private javax.swing.JTextField txtAnswerB;
