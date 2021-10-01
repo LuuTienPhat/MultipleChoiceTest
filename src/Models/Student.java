@@ -8,26 +8,32 @@ package Models;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  *
- * @author DTTM
+ * @author Phat
  */
-public class Student implements Serializable{
+public class Student implements Serializable {
+
     private String StudentId;
     private String StudentName;
     private LocalDateTime dateOfBirth;
     private String address;
+    private ArrayList<Record> records;
 
-    public Student(String StudentId, String StudentName, LocalDateTime dateOfBirth, String address) {
+    public Student() {
+        super();
+        records = new ArrayList<>();
+    }
+
+    public Student(String StudentId, String StudentName, LocalDateTime dateOfBirth, String address, ArrayList<Record> records) {
+        super();
         this.StudentId = StudentId;
         this.StudentName = StudentName;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
-    }
-
-    public Student() {
-        
+        this.records = records;
     }
 
     public String getStudentId() {
@@ -61,6 +67,13 @@ public class Student implements Serializable{
     public void setAddress(String address) {
         this.address = address;
     }
-    
-    
+
+    public ArrayList<Record> getRecords() {
+        return records;
+    }
+
+    public void setRecords(ArrayList<Record> records) {
+        this.records = records;
+    }
+
 }
