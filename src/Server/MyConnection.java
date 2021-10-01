@@ -21,7 +21,7 @@ public class MyConnection {
     public Connection getConnection() {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            String URL = "jdbc:sqlserver://DESKTOP-APT25E3:1433;databaseName=KIEMTRALTM;user=sa;password=123";
+            String URL = "jdbc:sqlserver://localhost:1433;databaseName=KIEMTRALTM;user=sa;password=123";
             Connection con = DriverManager.getConnection(URL);
             return con;
         } catch (ClassNotFoundException | SQLException ex) {
