@@ -6,6 +6,7 @@
 package Views;
 
 import Models.Exam;
+import Models.Record;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,7 +24,7 @@ import java.util.logging.Logger;
  * @author Phat
  */
 public class FormBeginTest extends javax.swing.JFrame {
-    
+
     Socket client;
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
@@ -72,6 +74,7 @@ public class FormBeginTest extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        btnShowScore = new javax.swing.JButton();
 
         jFormattedTextField1.setText("jFormattedTextField1");
 
@@ -126,6 +129,13 @@ public class FormBeginTest extends javax.swing.JFrame {
 
         jLabel9.setText("5 phút/ câu");
 
+        btnShowScore.setText("Xem điểm thi");
+        btnShowScore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnShowScoreActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -157,7 +167,8 @@ public class FormBeginTest extends javax.swing.JFrame {
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(levelC))
                                         .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel9)))
+                                    .addComponent(jLabel9)
+                                    .addComponent(btnShowScore)))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel7)
                                 .addGroup(layout.createSequentialGroup()
@@ -189,7 +200,9 @@ public class FormBeginTest extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(70, 70, 70)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnShowScore)
+                .addGap(41, 41, 41)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -216,12 +229,12 @@ public class FormBeginTest extends javax.swing.JFrame {
     private void startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startActionPerformed
         // TODO add your handling code here:
         String level = levelGroup.getSelection().getActionCommand();
-        
+
         try {
             client = new Socket(host, port);
             dataOutputStream = new DataOutputStream(client.getOutputStream());
             objectInputStream = new ObjectInputStream(client.getInputStream());
-            
+
             dataOutputStream.writeUTF("gettest");
             dataOutputStream.writeUTF(level);
             Main.test = new Exam();
@@ -232,15 +245,36 @@ public class FormBeginTest extends javax.swing.JFrame {
             LocalDateTime localDateTime = LocalDateTime.now();
             Main.test.setDatetime(localDateTime);
             new FormTest().setVisible(true);
-            
+
             this.dispose();
-            
+
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FormBeginTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_startActionPerformed
+
+    private void btnShowScoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowScoreActionPerformed
+        // TODO add your handling code here:
+        String studentId = Main.student.getStudentId();
+
+        try {
+            client = new Socket(host, port);
+            dataOutputStream = new DataOutputStream(client.getOutputStream());
+            objectInputStream = new ObjectInputStream(client.getInputStream());
+
+            dataOutputStream.writeUTF("examhistories");
+            dataOutputStream.writeUTF(studentId);
+            Main.student.setRecords((ArrayList<Record>) objectInputStream.readObject());
+
+            new FormRecord().setVisible(true);
+            this.dispose();
+
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(FormBeginTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnShowScoreActionPerformed
 
     /**
      * @param args the command line arguments
@@ -278,6 +312,7 @@ public class FormBeginTest extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnShowScore;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
